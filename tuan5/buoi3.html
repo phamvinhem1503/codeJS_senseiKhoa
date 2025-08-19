@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM THONG TIN SAN PHAM</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="ProductName mb-3">
+            <label for="ProductName" class="mb-1">ProductName</label>
+            <input type="text" id="ProductName" class="form-control mb-3" onkeyup="ProductNameCheck()">
+            <span class="error" id="ProductName-error"></span>
+        </div>
+
+        <div class="CategoriName mb-3">
+            <label for="CategoriName" class="mb-1">CategoriName</label>
+            <select class="form-control" name="CategoriName" id="CategoriName">
+                <option value="Iphone">Iphone</option>
+                <option value="Galaxy">Galaxy</option>
+                <option value="POCO">POCO</option>
+                <option value="REDMI note 10">REDMI NOTE 10</option>
+            </select>
+        </div>
+        <div class="price mb-3">
+            <label for="Price" class="mb-1">Price</label>
+            <input type="text" id="Price" class="form-control" onkeyup="PriceCheck(),TotalPrice()">
+            <span class="error" id="Price-error"></span>
+        </div>
+        <div class="Quantily mb-3">
+            <label for="Quantily" class="mb-1">Quantily</label>
+            <input type="text" id="Quantily" class="form-control" onkeyup="QuantilyCheck(),TotalPrice()">
+            <span class="error" id="Quantily-error"></span>
+        </div>
+        <div class="TotalPrice mb-3">
+            <label for="TotalPrice" class="mb-1">TotalPrice</label>
+            <input type="text" id="TotalPrice" class="form-control">
+
+        </div>
+        <div class="ManufacterName mb-4">
+            <label for="ManufacterName" class="mb-1">ManufacterName</label>
+            <select class="form-control" name="ManufacterName" id="ManufacterName">
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="Huawei">Huawei</option>
+                <option value="Xiaomi">Xiaomi</option>
+            </select>
+        </div>
+        <div class="btn-gr">
+            <div class="btn btn-success me-4" onclick="addProduct()">Add Product</div>
+            <div class="btn btn-secondary" onclick="resetForm()">Reset</div>
+        </div>
+        <h3 class="mt-4">Danh Sach San Pham</h3>
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>ProductName</th>
+                    <th>CategoriName</th>
+                    <th>Price</th>
+                    <th>Quantily</th>
+                    <th>TotalPrice</th>
+                    <th>ManufacterName</th>
+                    <th></th>
+                    <th></th>
+            </thead>
+            <tbody id="ProductList">
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
+<script>
+    let arrayListProduct = [];
+    function ProductNameCheck() {
+        let ProductName = document.getElementById("ProductName").value;
+        let ProductNamePT = /^[A-Z][A-Z]*$/;
+        let ProductNameError = document.getElementById("ProductName-error");
+        if (!ProductNamePT.test(ProductName)) {
+            ProductNameError.innerText = "Vui lòng nhập các kí tự viết hoa và không được chứa khoảng trắng";
+        } else {
+            ProductNameError.innerText = "";
+        }
+    }
+    function PriceCheck(params) {
+        let Price = document.getElementById("Price").value;
+        let PricePT = /^[0-9]+$/;
+        let PriceError = document.getElementById("Price-error");
+        if (!PricePT.test(Price)) {
+            PriceError.innerText = "Vui lòng nhập giá trị lớn hơn 0"
+        } else {
+            PriceError.innerText = "";
+        }
+    }
+    function QuantilyCheck(params) {
+        let Quantily = document.getElementById("Quantily").value;
+        let QuantilyPT = /^[0-9]+$/;
+        let QuantilyError = document.getElementById("Quantily-error");
+        if (!QuantilyPT.test(Quantily)) {
+            QuantilyError.innerText = "Vui lòng nhập vào giá trị lớn hơn 0";
+        } else {
+            QuantilyError.innerText = "";
+        }
+    }
+    function TotalPrice() {
+        let Price = document.getElementById("Price").value;
+        let Quantily = document.getElementById("Quantily").value;
+        let TotalPrice = document.getElementById("TotalPrice");
+        TotalPrice.value = Price * Quantily;
+    }
+    function addProduct() {
+        let productName = document.getElementById("ProductName").value;
+        let categoriName = document.getElementById("CategoriName").value;
+        let price = document.getElementById("Price").value;
+        let quantily = document.getElementById("Quantily").value;
+        let TotalPrice = document.getElementById("TotalPrice").value;
+        let ManufacterName = document.getElementById("ManufacterName").value;
+        if (productName === "" | categoriName === "" | price === "" | quantily === "" | TotalPrice === "" | ManufacterName === "") {
+            alert("Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
+        let ProductListBody = document.getElementById("ProductList");
+
+        let tr = document.createElement("tr");
+        // innerText de lay value cua cac bien nhan id
+        let tNo = document.createElement("td");
+        tNo.innerText = ProductListBody.children.length + 1;
+        let tName = document.createElement("td");
+        tName.innerText = productName;
+        let tCategori = document.createElement("td");
+        tCategori.innerText = categoriName;
+        let tPrice = document.createElement("td");
+        tPrice.innerText = price;
+        let tQuantily = document.createElement("td");
+        tQuantily.innerText = quantily;
+        let tTotalPrice = document.createElement("td");
+        tTotalPrice.innerText = TotalPrice;
+        let tManufacter = document.createElement("td");
+        tManufacter.innerText = ManufacterName;
+
+        // appendChild de gan gia tri td vao tr
+        tr.appendChild(tNo)
+        tr.appendChild(tName);
+        tr.appendChild(tCategori);
+        tr.appendChild(tPrice);
+        tr.appendChild(tQuantily);
+        tr.appendChild(tTotalPrice)
+        tr.appendChild(tManufacter);
+        ProductListBody.appendChild(tr);
+        resetForm();
+    }
+    function resetForm() {
+        let productName = document.getElementById("ProductName").value = "";
+        let categoriName = document.getElementById("CategoriName").value = "";
+        let price = document.getElementById("Price").value = "";
+        let quantily = document.getElementById("Quantily").value = "";
+        let TotalPrice = document.getElementById("TotalPrice").value = "";
+        let ManufacterName = document.getElementById("ManufacterName").value = "";
+    }
+</script>
